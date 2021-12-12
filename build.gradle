@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+group 'shandiankulishe.codes.base'
+version '0.0.1'
+
+repositories {
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+jar {
+    configurations.runtimeClasspath.collect{
+        it.isDirectory()?zipTree(it):it
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

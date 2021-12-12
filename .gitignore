@@ -1,0 +1,5 @@
+build
+.gradle
+.idea
+native\.vs
+native\out
