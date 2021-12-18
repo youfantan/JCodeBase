@@ -21,7 +21,8 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.1
         with:
-          vs-version: '[16.4,16.5)'
+          vs-version: '16.4'
+          msbuild-architecture: x64
       - name: Build C++ binary files
         run: ./build.cmd
       - name: Upload Artifact
