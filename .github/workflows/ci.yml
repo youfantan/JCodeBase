@@ -1,0 +1,35 @@
+name: CI
+on:
+  push:
+    branches: [ master ]
+jobs:
+  build:
+    runs-on: windows-2019
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 16
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Build Java binary files
+        run: gradlew build
+      - name: Setup CMake
+        uses: lukka/get-cmake@v3.21.2
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.1
+        with:
+          vs-version: '[16.4,16.5)'
+      - name: Build C++ binary files
+        run: build
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2.3.1]
+        with:
+          name: build_${{github.sha}}
+          path: ${{ github.workspace }}\build.tar.gz
+      - name: Push tag
+        run: |
+          git tag -a ${{github.sha}} -m "auto push by github actions"
+          git push origin --tags
