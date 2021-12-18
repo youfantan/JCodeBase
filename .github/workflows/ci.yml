@@ -25,7 +25,7 @@ jobs:
       - name: Build C++ binary files
         run: build
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2.3.1]
+        uses: actions/upload-artifact@v2.3.1
         with:
           name: build_${{github.sha}}
           path: ${{ github.workspace }}\build.tar.gz
