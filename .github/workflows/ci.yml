@@ -15,7 +15,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
       - name: Build Java binary files
-        run: gradlew build
+        run: ./gradlew build
       - name: Setup CMake
         uses: lukka/get-cmake@v3.21.2
       - name: Setup MSBuild
@@ -23,7 +23,7 @@ jobs:
         with:
           vs-version: '[16.4,16.5)'
       - name: Build C++ binary files
-        run: build
+        run: ./build.cmd
       - name: Upload Artifact
         uses: actions/upload-artifact@v2.3.1
         with:
