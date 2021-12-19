@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (Ljava/lang/String;I)Z
  */
 JNIEXPORT jboolean JNICALL Java_shandiankulishe_codes_base_ipc_nativeImpl_MemoryUtils_Alloc
-  (JNIEnv *, jobject, jstring, jint);
+  (JNIEnv *, jobject, jstring, jlong);
 
 /*
  * Class:     shandiankulishe_codes_base_ipc_nativeImpl_MemoryUtils

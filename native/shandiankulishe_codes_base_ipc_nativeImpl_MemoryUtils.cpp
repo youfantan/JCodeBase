@@ -7,7 +7,7 @@ void AlreadyExists(JNIEnv* env, jobject obj, const char* ipc_cache_name);
 jobject CreateStackTrace(JNIEnv* env, char* TraceName, char* TraceMessage, long ProcessID, long ThreadID);
 
 JNIEXPORT jboolean JNICALL Java_shandiankulishe_codes_base_ipc_nativeImpl_MemoryUtils_Alloc
-(JNIEnv* env, jobject obj, jstring name, jint size) {
+(JNIEnv* env, jobject obj, jstring name, jlong size) {
     const char* ipc_cache_name = env->GetStringUTFChars(name, NULL);
     HANDLE hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, 0, ipc_cache_name);
     if (hMapFile == NULL)
@@ -55,7 +55,15 @@ JNIEXPORT jboolean JNICALL Java_shandiankulishe_codes_base_ipc_nativeImpl_Memory
     }
     else {
         LPVOID pBuffer = MapViewOfFile(hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, 0);
-        strcpy((char*)env->GetDirectBufferAddress(buffer), (char*)pBuffer);
+        jclass clz = env->FindClass("java/nio/ByteBuffer");
+        jmethodID pmid = env->GetMethodID(clz, "put", "([B)Ljava/nio/ByteBuffer;");
+        env->CallObjectMethod(buffer, pmid, pCharToByteArray(env, (char*)pBuffer));
+
+        //strcpy((char*)env->GetDirectBufferAddress(buffer), (char*)pBuffer); will directly write chars to the memory.cannot mark and reset.
+
+        //mark the position
+        jmethodID mid = env->GetMethodID(clz, "mark", "()Ljava/nio/ByteBuffer;");
+        env->CallObjectMethod(buffer, mid);
         return true;
     }
 }

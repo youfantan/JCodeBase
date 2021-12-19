@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: windows-2019
     steps:
-      - name: Checkout Sources
+      - name: Checkout sources and Push tags
         uses: actions/checkout@v2
       - name: Setup Java
         uses: actions/setup-java@v1
@@ -15,7 +15,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
       - name: Build Java binary files
-        run: gradlew build
+        run: gradlew build -x test
       - name: Setup CMake
         uses: lukka/get-cmake@v3.21.2
       - name: Setup MSBuild
@@ -29,7 +29,3 @@ jobs:
         with:
           name: build_${{github.sha}}
           path: ${{ github.workspace }}\build.tar.gz
-      - name: Push tag
-        run: |
-          git tag -a ${{github.sha}} -m "auto push by github actions"
-          git push origin --tags

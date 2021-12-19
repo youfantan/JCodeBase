@@ -10,9 +10,14 @@ import java.util.List;
 
 public class MemoryUtils {
     private List<StackTrace> traces=new ArrayList<>();
+    public void PrintStackTraces(){
+        for (StackTrace t :
+                getLastErrors()) {
+            System.out.println(t.toString());
+        }
+    }
     public void AppendError(StackTrace trace){
         traces.add(trace);
-        System.out.println("test");
     }
     public StackTrace[] getLastErrors(){
         StackTrace[] traceArray=traces.toArray(new StackTrace[traces.size()]);
@@ -23,7 +28,7 @@ public class MemoryUtils {
     public static MemoryUtils getINSTANCE() {
         return INSTANCE;
     }
-    public native boolean Alloc(String mapName, int size);
+    public native boolean Alloc(String mapName, long size);
     public native boolean Read(String mapName, ByteBuffer buffer);
     public native boolean Write(String mapName,ByteBuffer buffer);
     public native boolean Close(String mapName);

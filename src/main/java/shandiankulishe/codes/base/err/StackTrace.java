@@ -38,7 +38,6 @@ public class StackTrace {
         TraceMessage = traceMessage;
         ProcessID = processID;
         ThreadID = threadID;
-        System.out.println("test");
     }
 
     private String TraceName;
