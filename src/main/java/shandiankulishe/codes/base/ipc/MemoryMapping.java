@@ -16,7 +16,7 @@ public class MemoryMapping {
         this.size=size;
         //alloc memory
         MemoryUtils.getINSTANCE().Alloc(mappingName, size);
-        buffer=ByteBuffer.allocateDirect((int) size);
+        buffer=ByteBuffer.allocate((int)size);
     }
     public String getMappingName(){
         return mappingName;
@@ -26,11 +26,12 @@ public class MemoryMapping {
         return size;
     }
     public byte[] getContent() throws MemoryException {
+        buffer.clear();
         //get available bytes
         if (!MemoryUtils.getINSTANCE().Read(mappingName,buffer)){
             throw new MemoryException();
         }
-        buffer.rewind();
+        buffer.reset();
         buffer.flip();
         ByteArrayOutputStream o=new ByteArrayOutputStream();
         while (buffer.hasRemaining()){
@@ -42,7 +43,7 @@ public class MemoryMapping {
         return new String(getContent(), StandardCharsets.UTF_8);
     }
     public void write(byte[] content) throws MemoryException {
-        if (!MemoryUtils.getINSTANCE().Write(mappingName,ByteBuffer.allocateDirect((int) size).put(content))){
+        if (!MemoryUtils.getINSTANCE().Write(mappingName,content)){
             throw new MemoryException();
         }
     }

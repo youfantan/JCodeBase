@@ -2,12 +2,15 @@
 #include "def.h"
 
 jbyteArray pCharToByteArray(JNIEnv* env, const char* buf);
+const char* jByteArrayTopChar(JNIEnv* env, jbyteArray array);
 void NoMappingFound(JNIEnv* env, jobject obj, const char* ipc_cache_name);
 void AlreadyExists(JNIEnv* env, jobject obj, const char* ipc_cache_name);
-jobject CreateStackTrace(JNIEnv* env, char* TraceName, char* TraceMessage, long ProcessID, long ThreadID);
+jobject CreateStackTrace(JNIEnv* env, char* TraceName, char* TraceMessage, long ProcessID, long ThreadID); \
+long bSize;
 
 JNIEXPORT jboolean JNICALL Java_shandiankulishe_codes_base_ipc_nativeImpl_MemoryUtils_Alloc
 (JNIEnv* env, jobject obj, jstring name, jlong size) {
+    bSize = size;
     const char* ipc_cache_name = env->GetStringUTFChars(name, NULL);
     HANDLE hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, 0, ipc_cache_name);
     if (hMapFile == NULL)
@@ -68,9 +71,8 @@ JNIEXPORT jboolean JNICALL Java_shandiankulishe_codes_base_ipc_nativeImpl_Memory
     }
 }
 JNIEXPORT jboolean JNICALL Java_shandiankulishe_codes_base_ipc_nativeImpl_MemoryUtils_Write
-(JNIEnv* env, jobject obj, jstring name, jobject buffer) {
+(JNIEnv* env, jobject obj, jstring name, jbyteArray array) {
     const char* ipc_cache_name = env->GetStringUTFChars(name, NULL);
-    const char* cache_content = (char*)env->GetDirectBufferAddress(buffer);
     HANDLE hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, 0, ipc_cache_name);
     if (hMapFile == NULL)
     {
@@ -79,7 +81,7 @@ JNIEXPORT jboolean JNICALL Java_shandiankulishe_codes_base_ipc_nativeImpl_Memory
     }
     else {
         LPVOID pBuffer = MapViewOfFile(hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, 0);
-        strcpy((char*)pBuffer, cache_content);
+        strcpy((char*)pBuffer, jByteArrayTopChar(env,array));
         return true;
     }
 }
@@ -117,4 +119,16 @@ void AlreadyExists(JNIEnv* env, jobject obj,const char* ipc_cache_name){
     jclass clz = env->GetObjectClass(obj);
     jmethodID mid = env->GetMethodID(clz, "AppendError", "(Lshandiankulishe/codes/base/err/StackTrace;)V");
     env->CallVoidMethod(obj, mid,CreateStackTrace(env,"Memory NativeImpl StackTrace",exception_message,pid,tid));
+}
+const char* jByteArrayTopChar(JNIEnv* env, jbyteArray array)
+{
+    int len = env->GetArrayLength(array);
+    jbyte* arr;
+    arr = env->GetByteArrayElements(array, 0);
+    char* res = new char[len+1];
+    memset(res, 0, len + 1);
+    memcpy(res, arr, len);
+    res[len] = 0;
+    env->ReleaseByteArrayElements(array, arr, 0);
+    return res;
 }

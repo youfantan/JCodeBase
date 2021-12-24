@@ -10,7 +10,7 @@ extern "C" {
 /*
  * Class:     shandiankulishe_codes_base_ipc_nativeImpl_MemoryUtils
  * Method:    Alloc
- * Signature: (Ljava/lang/String;I)Z
+ * Signature: (Ljava/lang/String;J)Z
  */
 JNIEXPORT jboolean JNICALL Java_shandiankulishe_codes_base_ipc_nativeImpl_MemoryUtils_Alloc
   (JNIEnv *, jobject, jstring, jlong);
@@ -26,10 +26,10 @@ JNIEXPORT jboolean JNICALL Java_shandiankulishe_codes_base_ipc_nativeImpl_Memory
 /*
  * Class:     shandiankulishe_codes_base_ipc_nativeImpl_MemoryUtils
  * Method:    Write
- * Signature: (Ljava/lang/String;Ljava/nio/ByteBuffer;)Z
+ * Signature: (Ljava/lang/String;[B)Z
  */
 JNIEXPORT jboolean JNICALL Java_shandiankulishe_codes_base_ipc_nativeImpl_MemoryUtils_Write
-  (JNIEnv *, jobject, jstring, jobject);
+  (JNIEnv *, jobject, jstring, jbyteArray);
 
 /*
  * Class:     shandiankulishe_codes_base_ipc_nativeImpl_MemoryUtils

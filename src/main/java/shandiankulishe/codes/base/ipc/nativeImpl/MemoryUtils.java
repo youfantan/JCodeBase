@@ -1,11 +1,9 @@
 package shandiankulishe.codes.base.ipc.nativeImpl;
 
 import shandiankulishe.codes.base.err.StackTrace;
-import shandiankulishe.codes.base.ipc.MemoryException;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MemoryUtils {
@@ -30,6 +28,6 @@ public class MemoryUtils {
     }
     public native boolean Alloc(String mapName, long size);
     public native boolean Read(String mapName, ByteBuffer buffer);
-    public native boolean Write(String mapName,ByteBuffer buffer);
+    public native boolean Write(String mapName,byte[] content);
     public native boolean Close(String mapName);
 }
