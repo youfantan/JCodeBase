@@ -16,10 +16,9 @@ public class IPCDaemon extends Thread{
         mappings.add(mappingName);
     }
     void erase(String mappingName){
-        mappings.add(mappingName);
+        mappings.remove(mappings.indexOf(mappingName));
     }
     void startDaemon(){
-        start();
         started=true;
         Runtime.getRuntime().addShutdownHook(this);
     }
@@ -27,6 +26,7 @@ public class IPCDaemon extends Thread{
     public void run() {
         for (int i = 0; i < mappings.size(); i++) {
             MemoryUtils.getINSTANCE().Close(mappings.get(i));
+            System.out.println("Cleaned Mapping:"+mappings.get(i));
         }
     }
 }

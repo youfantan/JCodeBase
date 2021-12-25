@@ -17,6 +17,7 @@ public class MemoryMapping {
         //alloc memory
         MemoryUtils.getINSTANCE().Alloc(mappingName, size);
         buffer=ByteBuffer.allocate((int)size);
+        IPCDaemon.getINSTANCE().push(mappingName);
     }
     public String getMappingName(){
         return mappingName;
@@ -64,6 +65,7 @@ public class MemoryMapping {
         append(content.getBytes(StandardCharsets.UTF_8));
     }
     public void release() throws MemoryException {
+        IPCDaemon.getINSTANCE().erase(mappingName);
         if (!MemoryUtils.getINSTANCE().Close(mappingName)){
             throw new MemoryException();
         }

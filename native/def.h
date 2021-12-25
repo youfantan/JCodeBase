@@ -3,6 +3,5 @@
 #include <io.h>
 #include <tchar.h>
 #include <stdio.h>
-#include <string.h>
-
+#include <string>
 #define DEFAULT_MAPPING_SIZE 4096 //define default mapping size(4kb)

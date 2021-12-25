@@ -12,3 +12,5 @@ copy native\build\Release\* dest\Release
 copy native\build\Debug\* dest\Debug
 7z a -ttar build.tar .\dest\*
 7z a -tgzip build.tar.gz build.tar
+copy native\build\Release\* .
+gradlew build

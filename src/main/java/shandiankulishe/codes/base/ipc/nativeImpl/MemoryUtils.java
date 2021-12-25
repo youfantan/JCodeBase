@@ -14,7 +14,7 @@ public class MemoryUtils {
             System.out.println(t.toString());
         }
     }
-    public void AppendError(StackTrace trace){
+    private void AppendError(StackTrace trace){
         traces.add(trace);
     }
     public StackTrace[] getLastErrors(){

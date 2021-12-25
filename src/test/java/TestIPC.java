@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Test;
 import shandiankulishe.codes.base.err.StackTrace;
+import shandiankulishe.codes.base.ipc.IPCModule;
 import shandiankulishe.codes.base.ipc.MemoryException;
 import shandiankulishe.codes.base.ipc.MemoryMapping;
 import shandiankulishe.codes.base.ipc.nativeImpl.MemoryUtils;
@@ -53,6 +54,7 @@ public class TestIPC {
     }
     @Test
     public void TestMemoryMappings() throws MemoryException {
+        IPCModule.setEnableDaemon(true);
         System.load(new File("native.dll").getAbsolutePath());
         MemoryMapping mapping=new MemoryMapping("test",1024);
         mapping.write("test");
@@ -62,6 +64,8 @@ public class TestIPC {
         mapping.write("clear");
         System.out.println(new String(mapping.getContent()));
         mapping.release();
+        mapping=new MemoryMapping("test_ipc_daemon",1024);
+        mapping.write("test ipc daemon");
         for (StackTrace trace:MemoryUtils.getINSTANCE().getLastErrors()
         ) {
             System.out.println(trace.toString());

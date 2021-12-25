@@ -5,7 +5,8 @@ jbyteArray pCharToByteArray(JNIEnv* env, const char* buf);
 const char* jByteArrayTopChar(JNIEnv* env, jbyteArray array);
 void NoMappingFound(JNIEnv* env, jobject obj, const char* ipc_cache_name);
 void AlreadyExists(JNIEnv* env, jobject obj, const char* ipc_cache_name);
-jobject CreateStackTrace(JNIEnv* env, char* TraceName, char* TraceMessage, long ProcessID, long ThreadID); \
+jobject CreateStackTrace(JNIEnv* env, char* TraceName, char* TraceMessage, long ProcessID, long ThreadID);
+void JNI_DEBUG(const char* msg);
 long bSize;
 
 JNIEXPORT jboolean JNICALL Java_shandiankulishe_codes_base_ipc_nativeImpl_MemoryUtils_Alloc
@@ -13,7 +14,7 @@ JNIEXPORT jboolean JNICALL Java_shandiankulishe_codes_base_ipc_nativeImpl_Memory
     bSize = size;
     const char* ipc_cache_name = env->GetStringUTFChars(name, NULL);
     HANDLE hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, 0, ipc_cache_name);
-    if (hMapFile == NULL)
+    if (GetLastError()!=ERROR_ALREADY_EXISTS&&hMapFile==NULL)
     {
         hMapFile = CreateFileMapping(
             INVALID_HANDLE_VALUE,
@@ -25,7 +26,11 @@ JNIEXPORT jboolean JNICALL Java_shandiankulishe_codes_base_ipc_nativeImpl_Memory
         return true;
     }
     else {
-        AlreadyExists(env,obj, ipc_cache_name);
+        std::string msg = "MAPPING ";
+        msg.append(ipc_cache_name);
+        msg.append(" ALREADY EXISTS");
+        JNI_DEBUG(msg.c_str());
+        AlreadyExists(env, obj, ipc_cache_name);
         return false;
     }
 }
@@ -43,6 +48,9 @@ JNIEXPORT jboolean JNICALL Java_shandiankulishe_codes_base_ipc_nativeImpl_Memory
         LPVOID pBuffer = MapViewOfFile(hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, 0);
         UnmapViewOfFile(pBuffer);
         CloseHandle(hMapFile);
+        std::string msg = "CLEANED MAPPING";
+        msg.append(ipc_cache_name);
+        JNI_DEBUG(msg.c_str());
         return true;
     }
 }
@@ -61,10 +69,6 @@ JNIEXPORT jboolean JNICALL Java_shandiankulishe_codes_base_ipc_nativeImpl_Memory
         jclass clz = env->FindClass("java/nio/ByteBuffer");
         jmethodID pmid = env->GetMethodID(clz, "put", "([B)Ljava/nio/ByteBuffer;");
         env->CallObjectMethod(buffer, pmid, pCharToByteArray(env, (char*)pBuffer));
-
-        //strcpy((char*)env->GetDirectBufferAddress(buffer), (char*)pBuffer); will directly write chars to the memory.cannot mark and reset.
-
-        //mark the position
         jmethodID mid = env->GetMethodID(clz, "mark", "()Ljava/nio/ByteBuffer;");
         env->CallObjectMethod(buffer, mid);
         return true;
@@ -131,4 +135,9 @@ const char* jByteArrayTopChar(JNIEnv* env, jbyteArray array)
     res[len] = 0;
     env->ReleaseByteArrayElements(array, arr, 0);
     return res;
+}
+void JNI_DEBUG(const char* msg) {
+#ifdef _DEBUG
+    printf("[JNI DEBUG]:%s\n", msg);
+#endif
 }
