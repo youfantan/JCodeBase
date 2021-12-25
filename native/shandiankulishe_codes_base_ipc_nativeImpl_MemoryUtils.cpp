@@ -109,9 +109,7 @@ void NoMappingFound(JNIEnv* env, jobject obj,const char* ipc_cache_name) {
     strcat(exception_message, "No Mapping ");
     strcat(exception_message, ipc_cache_name);
     strcat(exception_message, " was found in memory");
-    jclass clz = env->GetObjectClass(obj);
-    jmethodID mid = env->GetMethodID(clz, "AppendError", "(Lshandiankulishe/codes/base/err/StackTrace;)V");
-    env->CallVoidMethod(obj, mid, CreateStackTrace(env, "Memory NativeImpl StackTrace", exception_message, pid, tid));
+    CreateStackTrace(env, "Memory NativeImpl StackTrace", exception_message, pid, tid);
 }
 void AlreadyExists(JNIEnv* env, jobject obj,const char* ipc_cache_name){
     long tid = GetCurrentThreadId();
@@ -120,9 +118,7 @@ void AlreadyExists(JNIEnv* env, jobject obj,const char* ipc_cache_name){
     strcat(exception_message, "Mapping ");
     strcat(exception_message, ipc_cache_name);
     strcat(exception_message, " already exists");
-    jclass clz = env->GetObjectClass(obj);
-    jmethodID mid = env->GetMethodID(clz, "AppendError", "(Lshandiankulishe/codes/base/err/StackTrace;)V");
-    env->CallVoidMethod(obj, mid,CreateStackTrace(env,"Memory NativeImpl StackTrace",exception_message,pid,tid));
+    CreateStackTrace(env, "Memory NativeImpl StackTrace", exception_message, pid, tid);
 }
 const char* jByteArrayTopChar(JNIEnv* env, jbyteArray array)
 {

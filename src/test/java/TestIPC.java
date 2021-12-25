@@ -47,10 +47,7 @@ public class TestIPC {
         }
         System.out.println(baos.toString(StandardCharsets.UTF_8));
         MemoryUtils.getINSTANCE().Close("test");
-        for (StackTrace trace:MemoryUtils.getINSTANCE().getLastErrors()
-        ) {
-            System.out.println(trace.toString());
-        }
+        StackTrace.ReleaseAllStackTraces();
     }
     @Test
     public void TestMemoryMappings() throws MemoryException {
@@ -66,9 +63,6 @@ public class TestIPC {
         mapping.release();
         mapping=new MemoryMapping("test_ipc_daemon",1024);
         mapping.write("test ipc daemon");
-        for (StackTrace trace:MemoryUtils.getINSTANCE().getLastErrors()
-        ) {
-            System.out.println(trace.toString());
-        }
+        StackTrace.ReleaseAllStackTraces();
     }
 }

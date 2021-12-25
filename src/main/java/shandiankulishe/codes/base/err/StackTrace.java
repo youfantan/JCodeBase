@@ -1,6 +1,21 @@
 package shandiankulishe.codes.base.err;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StackTrace {
+    private static List<StackTrace> traces=new ArrayList<>();
+    public static StackTrace[] GetAllStackTraces(){
+        StackTrace[] traces=StackTrace.traces.toArray(new StackTrace[StackTrace.traces.size()]);
+        StackTrace.traces.clear();
+        return traces;
+    }
+    public static void ReleaseAllStackTraces(){
+        for (StackTrace traces :
+                GetAllStackTraces()) {
+            System.out.println(traces.toString());
+        }
+    }
     public String getTraceName() {
         return TraceName;
     }
@@ -38,6 +53,7 @@ public class StackTrace {
         TraceMessage = traceMessage;
         ProcessID = processID;
         ThreadID = threadID;
+        traces.add(this);
     }
 
     private String TraceName;
