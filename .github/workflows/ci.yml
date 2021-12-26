@@ -40,7 +40,6 @@ jobs:
           copy build\libs\* dest
       - name: Upload Artifact
         uses: actions/upload-artifact@v2.3.1
-        run: 
         with:
           name: build_${{github.sha}}
           path: ${{ github.workspace }}\dest
