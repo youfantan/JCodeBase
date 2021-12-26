@@ -23,7 +23,6 @@ jobs:
           msbuild-architecture: x64
       - name: Build binary files
         run: |
-          cmd
           mkdir native\build
           cd native\build
           cmake ..
@@ -36,7 +35,7 @@ jobs:
           copy native\build\Release\* dest\Release
           copy native\build\Debug\* dest\Debug
           copy native\build\Release\* .
-          gradlew build
+          ./gradlew build
           copy build\libs\* dest
       - name: Upload Artifact
         uses: actions/upload-artifact@v2.3.1
