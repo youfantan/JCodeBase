@@ -19,12 +19,28 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.1
         with:
-          vs-version: '16.4'
+          vs-version: '16.5'
           msbuild-architecture: x64
       - name: Build binary files
-        run: ./build.cmd
+        run: |
+          cmd
+          mkdir native\build
+          cd native\build
+          cmake ..
+          msbuild native.vcxproj /p:configuration=release
+          msbuild native.vcxproj /p:configuration=debug
+          cd ..\..
+          mkdir dest
+          mkdir dest\Release
+          mkdir dest\Debug
+          copy native\build\Release\* dest\Release
+          copy native\build\Debug\* dest\Debug
+          copy native\build\Release\* .
+          gradlew build
+          copy build\libs\* dest
       - name: Upload Artifact
         uses: actions/upload-artifact@v2.3.1
+        run: 
         with:
           name: build_${{github.sha}}
-          path: ${{ github.workspace }}\build.tar.gz
+          path: ${{ github.workspace }}\dest
